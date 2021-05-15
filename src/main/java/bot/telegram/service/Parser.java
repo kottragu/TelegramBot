@@ -54,7 +54,7 @@ public class Parser {
             if (event.getGroup() == null || event.getDayOfWeek() == null || event.getFrequency() == null || event.getTitle() == null || event.getTime() == null)
                 throw new ParserException();
 
-            if (event.getTime().getHours() > 12 || event.getTime().getHours() < 0 || event.getTime().getMinutes() < 0 || event.getTime().getMinutes() > 59)
+            if (event.getTime().getHours() > 23 || event.getTime().getHours() < 0 || event.getTime().getMinutes() < 0 || event.getTime().getMinutes() > 59)
                 throw new ParserException();
 
 
