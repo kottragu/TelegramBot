@@ -1,9 +1,8 @@
 package bot.telegram.controller;
 
 
-import bot.telegram.service.EventService;
+import bot.telegram.service.Help;
 import bot.telegram.service.ScheduleService;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,8 +57,7 @@ public class Bot extends TelegramLongPollingBot {
             String group = incomingMessage.substring(9).trim();
             message.setText(scheduleService.getSchedule(group));
         } else if (incomingMessage.startsWith("/help") || incomingMessage.startsWith("/start")) {
-            //TODO сделать хелб
-
+            message.setText(Help.getHelp());
         } else {
                 message.setText("Неправильное использование бота, попробуйте ещё раз");
         }
