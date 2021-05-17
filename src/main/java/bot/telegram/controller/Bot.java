@@ -5,6 +5,7 @@ import bot.telegram.service.Help;
 import bot.telegram.service.ScheduleService;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+@Slf4j
 @Component
 @NoArgsConstructor
 @ConfigurationProperties("bot")
@@ -44,9 +46,8 @@ public class Bot extends TelegramLongPollingBot {
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(update.getMessage().getChatId()));
         message.setReplyToMessageId(update.getMessage().getMessageId());
-
         String incomingMessage = update.getMessage().getText();
-
+        log.info(update.getMessage().getFrom().getUserName() + " input: " + incomingMessage);
         if (incomingMessage.startsWith("/addSchedule")) {
             if(scheduleService.createEvent(update)) {
                 message.setText("Мероприятие успешно добавлено");

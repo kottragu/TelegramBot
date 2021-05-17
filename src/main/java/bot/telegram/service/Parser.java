@@ -4,12 +4,14 @@ import bot.telegram.entity.Event;
 import bot.telegram.exception.ParserException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @Component
 public class Parser {
 
@@ -33,7 +35,7 @@ public class Parser {
         for (String param: parameters) {
             try {
                 if (!param.contains(":") || param.indexOf(":") == param.length()) {
-                    throw new Exception();
+                    throw new Exception("Incorrect length of parameter");
                 }
 
                 String[] array = new String[2];
@@ -42,6 +44,7 @@ public class Parser {
                 array[1] = param;
                 userParameters.put(array[0].trim(), array[1].trim());
             } catch (Exception e) {
+                log.error(e.getMessage());
                 throw new ParserException();
             }
         }
@@ -52,10 +55,10 @@ public class Parser {
             Event event = objectMapper.convertValue(userParameters, Event.class);
 
             if (event.getGroup() == null || event.getDayOfWeek() == null || event.getFrequency() == null || event.getTitle() == null || event.getTime() == null)
-                throw new ParserException();
+                throw new ParserException("Doesn't exist one or more statements");
 
             if (event.getTime().getHours() > 23 || event.getTime().getHours() < 0 || event.getTime().getMinutes() < 0 || event.getTime().getMinutes() > 59)
-                throw new ParserException();
+                throw new ParserException("Incorrect time");
 
 
             //TODO сделать для одноразовых мероприятий
@@ -65,7 +68,7 @@ public class Parser {
 
             return event;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage() + "caused by " + e.getCause());
             throw new ParserException();
         }
 
