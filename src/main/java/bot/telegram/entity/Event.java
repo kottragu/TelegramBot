@@ -1,17 +1,16 @@
 package bot.telegram.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
-import java.time.DayOfWeek;
 
-@Entity
 @Data
 @NoArgsConstructor
-@Table(name = "event_repo", schema = "schedule_repository")
+@RequiredArgsConstructor
+@MappedSuperclass
 public class Event implements Comparable<Event>{
     @Id
     @GeneratedValue
@@ -20,13 +19,6 @@ public class Event implements Comparable<Event>{
     @NonNull
     @Column(name = "target_group")
     private String group;
-
-    @NonNull
-    private Frequency frequency;
-
-    @NonNull
-    @JsonProperty(value = "dayofweek")
-    private DayOfWeek dayOfWeek;
 
     @NonNull
     @OneToOne(cascade = CascadeType.ALL)

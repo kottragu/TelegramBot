@@ -2,18 +2,19 @@ package bot.telegram.service;
 
 import bot.telegram.entity.Event;
 import bot.telegram.entity.Frequency;
-import bot.telegram.exception.ParserException;
+import bot.telegram.entity.RepeatingEvent;
 import bot.telegram.repo.EventRepo;
+import bot.telegram.service.interfaces.EventService;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
 
 @Service
 @Data
@@ -26,12 +27,12 @@ public class DefaultEventService implements EventService {
         this.eventRepo = eventRepo;
     }
 
-    public boolean createEvent(String s) {
+    public boolean createEvent(String s) throws Exception {
         Parser parser = new Parser();
         Event event;
         try {
-            event = parser.parse(s.toLowerCase());
-        } catch (ParserException e) {
+            event = parser.parse(s);
+        } catch (Exception e) {
             return false;
         }
         eventRepo.save(event);
@@ -47,18 +48,21 @@ public class DefaultEventService implements EventService {
         if (firstDay.getDayOfWeek().getValue() > 4) {
             week++;
         }
-        List<Event> events = eventRepo.findByDayOfWeekAndGroup(day,group);
+        List<Event> events = checkWeek(week, eventRepo.findRepeatingEvents(day,group));
+        events.addAll(eventRepo.findSingleEvents(today.getDayOfMonth(), today.getMonth()));
         return checkWeek(week, events);
     }
+
 
     private ArrayList<Event> checkWeek(int week, List<Event> events) {
         ArrayList<Event> result = new ArrayList<>();
         for(Event event: events) {
-            if (event.getFrequency() == Frequency.EVERY_WEEK) {
+            RepeatingEvent repeatingEvent = (RepeatingEvent) event;
+            if (repeatingEvent.getFrequency() == Frequency.EVERY_WEEK) {
                 result.add(event);
-            } else if (week%2==1 && event.getFrequency() == Frequency.ODD_WEEK) {
+            } else if (week%2==1 && repeatingEvent.getFrequency() == Frequency.ODD_WEEK) {
                 result.add(event);
-            } else if (week%2==0 && event.getFrequency() == Frequency.EVEN_WEEK) {
+            } else if (week%2==0 && repeatingEvent.getFrequency() == Frequency.EVEN_WEEK) {
                 result.add(event);
             }
         }

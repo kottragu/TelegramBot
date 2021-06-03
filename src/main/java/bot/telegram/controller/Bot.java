@@ -2,13 +2,15 @@ package bot.telegram.controller;
 
 
 import bot.telegram.service.Help;
-import bot.telegram.service.ScheduleService;
+import bot.telegram.service.interfaces.ScheduleService;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -41,6 +43,7 @@ public class Bot extends TelegramLongPollingBot {
     }
 
 
+    @SneakyThrows
     @Override
     public void onUpdateReceived(Update update) {
         SendMessage message = new SendMessage();
@@ -48,6 +51,7 @@ public class Bot extends TelegramLongPollingBot {
         message.setReplyToMessageId(update.getMessage().getMessageId());
         String incomingMessage = update.getMessage().getText();
         log.info(update.getMessage().getFrom().getUserName() + " input: " + incomingMessage);
+
         if (incomingMessage.startsWith("/addSchedule")) {
             if(scheduleService.createEvent(update)) {
                 message.setText("Мероприятие успешно добавлено");

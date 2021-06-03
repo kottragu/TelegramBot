@@ -1,11 +1,14 @@
 package bot.telegram.service;
 
 import bot.telegram.entity.Event;
+import bot.telegram.service.interfaces.EventService;
+import bot.telegram.service.interfaces.ScheduleService;
+import bot.telegram.service.interfaces.ViewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
-
 import java.util.List;
+
 
 @Service
 public class DefaultScheduleService implements ScheduleService {
@@ -23,7 +26,7 @@ public class DefaultScheduleService implements ScheduleService {
     }
 
     @Override
-    public boolean createEvent(Update update) {
+    public boolean createEvent(Update update) throws Exception {
         return eventService.createEvent(update.getMessage().getText());
     }
 

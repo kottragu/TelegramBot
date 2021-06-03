@@ -1,6 +1,7 @@
 package bot.telegram.service;
 
 import bot.telegram.entity.Event;
+import bot.telegram.service.interfaces.ViewService;
 import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -9,8 +10,6 @@ import java.util.List;
 
 @Service
 public class DefaultViewService implements ViewService {
-
-
     @Override
     public String convert(List<Event> events) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("E, dd.MM.yyyy");
