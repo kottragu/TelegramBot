@@ -2,6 +2,7 @@ package bot.telegram.service;
 
 import bot.telegram.entity.Event;
 import bot.telegram.entity.RepeatingEvent;
+import bot.telegram.entity.WeekRepeatingEvent;
 import bot.telegram.entity.SingleEvent;
 import bot.telegram.exception.ParserException;
 import com.fasterxml.jackson.databind.MapperFeature;
@@ -59,18 +60,19 @@ public class Parser {
             objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true);
 
             if ( userParameters.containsKey("frequency")) {
-                RepeatingEvent event = objectMapper.convertValue(userParameters, RepeatingEvent.class);
+                WeekRepeatingEvent event = objectMapper.convertValue(userParameters, WeekRepeatingEvent.class);
                 if (!checkMistakeRepeatingEvent(event)) {
                     throw new ParserException("Incorrect data");
                 }
                 return event;
             } else if (userParameters.containsKey("month")) {
-
                 SingleEvent event = objectMapper.convertValue(userParameters, SingleEvent.class);
                 if (!checkMistakeSingleEvent(event)){
                     throw new ParserException("Incorrect data");
                 }
-
+                return event;
+            } else if (userParameters.containsKey("date")) {
+                RepeatingEvent event = objectMapper.convertValue(userParameters, RepeatingEvent.class);
                 return event;
             } else
                 throw new ParserException();
@@ -92,7 +94,7 @@ public class Parser {
         return checkTime(event);
     }
 
-    private boolean checkMistakeRepeatingEvent(RepeatingEvent event) {
+    private boolean checkMistakeRepeatingEvent(WeekRepeatingEvent event) {
         return checkTime(event);
     }
 

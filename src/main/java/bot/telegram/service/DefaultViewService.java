@@ -16,10 +16,11 @@ public class DefaultViewService implements ViewService {
         StringBuilder result = new StringBuilder(dateFormat.format(new Date()));
         Collections.sort(events);
         for (Event e: events) {
-            result.append("\n");
+            result.append("\n_");
             result.append(e.getTime()).append(" ").append(e.getTitle()).append(" ");
             if (e.getDescription() != null)
                 result.append(e.getDescription());
+            result.append("_");
         }
         return result.toString();
     }
