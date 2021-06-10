@@ -2,18 +2,12 @@ package bot.telegram.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import javax.persistence.Embeddable;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-
-@Entity
+@Embeddable
 @Data
 @NoArgsConstructor
-public class Time implements Comparable<Time>{
-    @Id
-    @GeneratedValue
-    private Long id;
+public class Time implements Comparable<Time> {
     private int hours;
     private int minutes;
 

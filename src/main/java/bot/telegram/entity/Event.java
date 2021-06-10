@@ -21,7 +21,7 @@ public class Event implements Comparable<Event>{
     private String group;
 
     @NonNull
-    @OneToOne(cascade = CascadeType.ALL)
+    @Embedded
     private Time time;
 
     @NonNull
