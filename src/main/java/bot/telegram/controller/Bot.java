@@ -60,8 +60,7 @@ public class Bot extends TelegramLongPollingBot {
                 message.setText("Мероприятие не внесено");
             }
         } else if (incomingMessage.startsWith("/schedule")) {
-            String group = incomingMessage.substring(10).trim();
-            message.setText(scheduleService.getSchedule(group));
+            message.setText(scheduleService.getSchedule(update));
         } else if (incomingMessage.startsWith("/help") || incomingMessage.startsWith("/start")) {
             message.setText(Help.getHelp());
         } else {

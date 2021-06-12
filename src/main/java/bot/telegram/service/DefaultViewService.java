@@ -13,6 +13,9 @@ import java.util.List;
 public class DefaultViewService implements ViewService {
     @Override
     public String convert(List<Event> events) {
+        if (events.size() == 0)
+            return "You haven't plans for today";
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("E, dd.MM.yyyy");
         StringBuilder result = new StringBuilder(dateFormat.format(new Date()));
         Collections.sort(events);
@@ -28,6 +31,7 @@ public class DefaultViewService implements ViewService {
                 add(e, result);
             }
         }
+
         return result.toString();
     }
 

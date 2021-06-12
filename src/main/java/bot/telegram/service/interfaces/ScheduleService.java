@@ -5,5 +5,5 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public interface ScheduleService {
 
     boolean createEvent(Update update) throws Exception;
-    String getSchedule(String group);
+    String getSchedule(Update update) throws Exception;
 }
