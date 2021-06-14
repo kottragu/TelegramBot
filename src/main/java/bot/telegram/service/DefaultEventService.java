@@ -49,6 +49,7 @@ public class DefaultEventService implements EventService {
         List<Event> events = checkWeek(week, eventRepo.findWeekRepeatingEvents(today.getDayOfWeek(),group));
         events.addAll(eventRepo.findSingleEvents(today.getDayOfMonth(), today.getMonth(), group));
         events.addAll(checkDateRepeatingEvent(eventRepo.findRepeatingEvent(group), today));
+        checkTime(events);
         return events;
     }
 
@@ -84,6 +85,22 @@ public class DefaultEventService implements EventService {
             }
         }
         return result;
+    }
+
+    private void checkTime(List<Event> eventsBeforeCheck) {
+        List<Event> badEvents = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+        int hours = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        for (Event e: eventsBeforeCheck) {
+            if (e.getTime().getHours() < hours){
+                badEvents.add(e);
+            } else if (e.getTime().getHours() == hours && e.getTime().getMinutes() < minute) {
+                badEvents.add(e);
+            }
+        }
+        eventsBeforeCheck.removeAll(badEvents);
     }
 
 

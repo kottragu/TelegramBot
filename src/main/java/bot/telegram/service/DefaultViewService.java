@@ -4,7 +4,6 @@ import bot.telegram.entity.Event;
 import bot.telegram.service.interfaces.ViewService;
 import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -20,16 +19,8 @@ public class DefaultViewService implements ViewService {
         StringBuilder result = new StringBuilder(dateFormat.format(new Date()));
         Collections.sort(events);
 
-        Calendar calendar = Calendar.getInstance();
-        int hours = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
-
         for (Event e: events) {
-            if (e.getTime().getHours() > hours){
-                add(e, result);
-            } else if (e.getTime().getHours() == hours && e.getTime().getMinutes() >= minute) {
-                add(e, result);
-            }
+            add(e, result);
         }
 
         return result.toString();
