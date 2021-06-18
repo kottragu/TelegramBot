@@ -49,7 +49,6 @@ public class Bot extends TelegramLongPollingBot {
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(update.getMessage().getChatId()));
         message.setReplyToMessageId(update.getMessage().getMessageId());
-        message.enableMarkdown(true);
         String incomingMessage = update.getMessage().getText();
         log.info(update.getMessage().getFrom().getUserName() + " input: " + incomingMessage);
 
@@ -60,6 +59,7 @@ public class Bot extends TelegramLongPollingBot {
                 message.setText("Мероприятие не внесено");
             }
         } else if (incomingMessage.startsWith("/schedule")) {
+            message.enableMarkdown(true);
             message.setText(scheduleService.getSchedule(update));
         } else if (incomingMessage.startsWith("/help") || incomingMessage.startsWith("/start")) {
             message.setText(Help.getHelp());
